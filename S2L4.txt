@@ -1,0 +1,125 @@
+ESERCIZIO 3
+
+a. SELECT *
+  FROM [EsercizioS2L4].[dbo].[IMPIEGATO]
+  WHERE Eta > 29
+
+b. SELECT *
+  FROM [EsercizioS2L4].[dbo].[IMPIEGATO]
+  WHERE RedditoMensile >= 800.00
+
+c. SELECT *
+  FROM [EsercizioS2L4].[dbo].[IMPIEGATO]
+  WHERE DetrazioneFiscale = 1
+
+d. SELECT *
+  FROM [EsercizioS2L4].[dbo].[IMPIEGATO]
+  WHERE DetrazioneFiscale = 0
+
+e. SELECT *
+  FROM [EsercizioS2L4].[dbo].[IMPIEGATO]
+  WHERE Cognome like 'G%'
+  ORDER BY Cognome ASC
+
+f. SELECT count (*) as NumeroDipendenti
+  FROM [EsercizioS2L4].[dbo].[IMPIEGATO]
+
+g. SELECT sum(RedditoMensile) as SommaTotaleRedditiMensili
+  FROM [EsercizioS2L4].[dbo].[IMPIEGATO]
+
+h. SELECT AVG(RedditoMensile) as MediaRedditiMensili
+  FROM [EsercizioS2L4].[dbo].[IMPIEGATO]
+
+i. SELECT MAX(RedditoMensile) as RedditoMensilePiùAlto
+  FROM [EsercizioS2L4].[dbo].[IMPIEGATO]
+
+j. SELECT MIN(RedditoMensile) as RedditoMensilePiùBasso
+  FROM [EsercizioS2L4].[dbo].[IMPIEGATO]
+
+k. SELECT *
+  FROM [EsercizioS2L4].[dbo].[IMPIEGATO]
+  WHERE DataAssunzione between '01/01/2007' and '01/01/2023'
+
+l. SELECT Cognome, Nome, CodiceFiscale, Eta, RedditoMensile, TipoImpiego
+  FROM IMPIEGATO
+  LEFT JOIN
+  IMPIEGO ON
+  IMPIEGATO.IDImpiego = IMPIEGO.IDImpiego
+  WHERE TipoImpiego = 'Sviluppatore Frontend'
+
+m. SELECT AVG(Eta) 
+  FROM [EsercizioS2L4].[dbo].[IMPIEGATO]
+
+ESERCIZIO 4
+
+a. SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE MemorizzaNuovoImpiegato
+    @Cognome NVARCHAR(50),
+    @Nome NVARCHAR(50),
+    @CodiceFiscale NVARCHAR(16),
+    @Eta TINYINT,
+    @RedditoMensile MONEY,
+    @DetrazioneFiscale BIT,
+    @IDImpiego INT,
+    @DataAssunzione DATETIME
+AS
+BEGIN
+    INSERT INTO IMPIEGATO (Cognome, Nome, CodiceFiscale, Eta, RedditoMensile, DetrazioneFiscale, IDImpiego, DataAssunzione)
+    VALUES (@Cognome, @Nome, @CodiceFiscale, @Eta, @RedditoMensile, @DetrazioneFiscale, @IDImpiego, @DataAssunzione)
+	SELECT *
+	FROM IMPIEGATO
+	WHERE Cognome = @Cognome and Nome = @Nome
+END
+
+
+b. SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE AggiornaImpiegato
+	@IDImpiegato int,
+    @Cognome NVARCHAR(50),
+    @Nome NVARCHAR(50),
+    @CodiceFiscale NVARCHAR(16),
+    @Eta TINYINT,
+    @RedditoMensile MONEY,
+    @DetrazioneFiscale BIT,
+    @IDImpiego INT,
+    @DataAssunzione DATETIME
+AS
+
+BEGIN
+    UPDATE IMPIEGATO 
+	SET Cognome = @Cognome,
+	Nome = @Nome,
+	CodiceFiscale = @CodiceFiscale,
+	Eta = @Eta,
+	RedditoMensile = @RedditoMensile,
+	DetrazioneFiscale = @DetrazioneFiscale,
+	IDImpiego = @IDImpiego,
+	DataAssunzione = @DataAssunzione
+	WHERE IDImpiegato = @IDImpiegato
+	SELECT *
+	FROM IMPIEGATO
+	WHERE IDImpiegato = @IDImpiegato
+END
+
+c. SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE CancellaImpiegato
+@IDImpiegato int
+AS
+BEGIN
+	DELETE FROM IMPIEGATO
+	WHERE IDImpiegato = @IDImpiegato
+	SELECT *
+	FROM IMPIEGATO
+END
